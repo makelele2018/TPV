@@ -21,6 +21,7 @@ public class AltaEmpleado implements ActionListener, WindowListener
 	Label lblNombreEmpleado = new Label("Nombre:");
 	TextField txtNombreEmpleado = new TextField(20);
 	Label lblApellidosEmpleado = new Label("Apellidos:");
+	TextField txtApellidosEmpleado = new TextField(20);
 	TextField txtDireccionEmpleado = new TextField(20);
 	Label lblDireccionEmpleado = new Label("Direccion:");
 	Label lblTelefonoEmpleado = new Label("Telefono:");
@@ -44,6 +45,7 @@ public class AltaEmpleado implements ActionListener, WindowListener
 		txtNombreEmpleado.setText("");
 		frmAltaEmpleado.add(txtNombreEmpleado);
 		frmAltaEmpleado.add(lblApellidosEmpleado);
+		frmAltaEmpleado.add(txtApellidosEmpleado);
 		txtNombreEmpleado.setText("");
 		frmAltaEmpleado.add(txtDireccionEmpleado);
 		frmAltaEmpleado.add(lblDireccionEmpleado);
@@ -122,10 +124,12 @@ public class AltaEmpleado implements ActionListener, WindowListener
 				{
 					sentencia = "INSERT INTO empleados VALUES (null, '"
 							+ txtNombreEmpleado.getText()
-							 
+							
 							+ "', '" +txtDireccionEmpleado.getText()
 							+ "', '" +txtTelefonoEmpleado.getText()+ "')";
+					FicheroLog.guardar(Login.nombreUsuario, sentencia);
 					statement.executeUpdate(sentencia);
+					
 					lblMensajeAltaEmpleado.setText("Alta de Empleado Correcta");
 				}
 				else

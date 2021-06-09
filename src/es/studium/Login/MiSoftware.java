@@ -9,11 +9,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class MiSoftware implements WindowListener, ActionListener
 {
 	// Ventana Principal
 	Frame ventana = new Frame("TPV");
+	
+	BaseDatos bd;
+	String sentencia = "";
+	Connection connection = null;
+	Statement statement = null;
+	ResultSet rs = null;
+	
+	public static String nombreUsuario;
 
 	MenuBar mnBar = new MenuBar();
 
@@ -29,20 +40,26 @@ public class MiSoftware implements WindowListener, ActionListener
 	MenuItem mniModificacionEmpleado = new MenuItem("Modificación");
 	MenuItem mniConsultaEmpleado = new MenuItem("Consulta");
 
-	Menu mnuProyectos = new Menu("Productos");
-	MenuItem mniAltaProyecto = new MenuItem("Alta");
-	//MenuItem mniBajaProyecto = new MenuItem("Baja");
-	//MenuItem mniModificacionProyecto = new MenuItem("Modificación");
-	MenuItem mniConsultaProyecto= new MenuItem("Consulta");
+	Menu mnuProducto = new Menu("Productos");
+	MenuItem mniAltaProducto = new MenuItem("Alta");
+	MenuItem mniBajaProducto = new MenuItem("Baja");
+	MenuItem mniModificacionProducto = new MenuItem("Modificación");
+	MenuItem mniConsultaProducto= new MenuItem("Consulta");
 
-	Menu mnuAsignaciones = new Menu("Mesas");
-	MenuItem mniAltaAsignacion = new MenuItem("Alta");
-	//MenuItem mniBajaAsignacion = new MenuItem("Baja");
-	//MenuItem mniModificacionAsignacion = new MenuItem("Modificación");
-	MenuItem mniConsultaAsignacion = new MenuItem("Consulta");
+	Menu mnuMesa = new Menu("Mesas");
+	MenuItem mniAltaMesa = new MenuItem("Alta");
+	MenuItem mniBajaMesa = new MenuItem("Baja");
+	MenuItem mniModificacionMesa = new MenuItem("Modificación");
+	MenuItem mniConsultaMesa = new MenuItem("Consulta");
+	
+	Menu mnuAyuda = new Menu("Ayuda");
+	MenuItem mniAyuda = new MenuItem("Ayuda");
+	
+	
 
 	public MiSoftware(int tipo)
 	{
+		
 		ventana.setLayout(new FlowLayout());
 		mniAltaCliente.addActionListener(this);
 		mnuClientes.add(mniAltaCliente);
@@ -70,32 +87,42 @@ public class MiSoftware implements WindowListener, ActionListener
 		}
 		mnBar.add(mnuEmpleados);
 
-		mniAltaProyecto.addActionListener(this);
-		mnuProyectos.add(mniAltaProyecto);
+		mniAltaProducto.addActionListener(this);
+		mnuProducto.add(mniAltaProducto);
 		if(tipo==0) // ¿Es administrador?
 		{
-			//mnuProyectos.add(mniBajaProyecto);
-			//mnuProyectos.add(mniModificacionProyecto);
-			mniConsultaProyecto.addActionListener(this);
-			mnuProyectos.add(mniConsultaProyecto);
+			mnuProducto.add(mniBajaProducto);
+			mniBajaProducto.addActionListener(this);
+			mnuProducto.add(mniModificacionProducto);
+			mniModificacionProducto.addActionListener(this);
+			mniConsultaProducto.addActionListener(this);
+			mnuProducto.add(mniConsultaProducto);
 		}
-		mnBar.add(mnuProyectos);
+		mnBar.add(mnuProducto);
 
-		mniAltaAsignacion.addActionListener(this);
-		mnuAsignaciones.add(mniAltaAsignacion);
+		mniAltaMesa.addActionListener(this);
+		mnuMesa.add(mniAltaMesa);
 		if(tipo==0) // ¿Es administrador?
 		{
-			//mnuAsignaciones.add(mniBajaAsignacion);
-			//mnuAsignaciones.add(mniModificacionAsignacion);
-			mniConsultaAsignacion.addActionListener(this);
-			mnuAsignaciones.add(mniConsultaAsignacion);
+			mnuMesa.add(mniBajaMesa);
+			mniBajaMesa.addActionListener(this);
+			mnuMesa.add(mniModificacionMesa);
+			mniModificacionMesa.addActionListener(this);
+			mniAltaMesa.addActionListener(this);
+			mnuMesa.add(mniAltaMesa);
+			mniConsultaMesa.addActionListener(this);
+			mnuMesa.add(mniConsultaMesa);
 		}
-		mnBar.add(mnuAsignaciones);
+		mnBar.add(mnuMesa);
+		
+		mniAyuda.addActionListener(this);
+		mnuAyuda.add(mniAyuda);
+		mnBar.add(mnuAyuda);
 
 		ventana.setMenuBar(mnBar);
 
-		ventana.setSize(320,160);
-		ventana.setResizable(false);
+		ventana.setSize(400,200);
+		ventana.setResizable(true);
 		ventana.setLocationRelativeTo(null);
 		ventana.addWindowListener(this);
 		ventana.setVisible(true);
@@ -147,6 +174,48 @@ public class MiSoftware implements WindowListener, ActionListener
 		{
 			new ModificarEmpleado();
 		}
+		else if(evento.getSource().equals(mniAltaProducto))
+		{
+			new AltaProducto();
+		}
+		else if(evento.getSource().equals(mniConsultaProducto))
+		{
+			new ConsultaProducto();
+		}
+		else if(evento.getSource().equals(mniAltaMesa))
+		{
+			new AltaMesa();
+		}
+		else if(evento.getSource().equals(mniConsultaMesa))
+		{
+			new ConsultaMesa();
+		}
+		else if(evento.getSource().equals(mniBajaProducto))
+		{
+			new BajaProducto();
+		}
+		else if(evento.getSource().equals(mniBajaMesa))
+		{
+			new BajaMesa();
+		}
+		else if(evento.getSource().equals(mniModificacionProducto))
+		{
+			new ModificarProducto();
+		}
+		else if(evento.getSource().equals(mniModificacionMesa))
+		{
+			new ModificarMesa();
+		}
+		else if(evento.getSource().equals(mniAyuda))
+		{
+			Ayuda.ejecutarAyuda();
+		}
 		
 	
-	}}
+	}
+	
+
+	
+	
+
+}

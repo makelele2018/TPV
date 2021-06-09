@@ -52,7 +52,9 @@ public class BajaCliente implements ActionListener, WindowListener
 					ResultSet.CONCUR_READ_ONLY);
 			//Crear un objeto ResultSet para guardar lo obtenido
 			//y ejecutar la sentencia SQL
+			FicheroLog.guardar(Login.nombreUsuario, sentencia);
 			rs = statement.executeQuery(sentencia);
+			
 			choClientes.removeAll();
 			while(rs.next())
 			{
@@ -169,6 +171,7 @@ public class BajaCliente implements ActionListener, WindowListener
 				//Crear una sentencia
 				statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);
+				FicheroLog.guardar(Login.nombreUsuario, sentencia);
 				statement.executeUpdate(sentencia);
 				lblConfirmacionBajaCliente.setText("Baja de Cliente Correcta");
 			}

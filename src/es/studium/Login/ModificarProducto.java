@@ -16,28 +16,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class ModificarEmpleado implements WindowListener, ActionListener
+public class ModificarProducto implements WindowListener, ActionListener
 {
 	Frame ventana = new Frame("Editar Empleado");
-	Label lblEmpleado = new Label("Elegir Empleado");
-	List listEmpleados = new List(8, false);
+	Label lblProducto = new Label("Elegir Producto");
+	List listProducto = new List(8, false);
 	Button btnEditar = new Button("Editar");
 	Button btnCancelar = new Button("Cancelar");
 
-	Frame ventanaEdicion = new Frame("Editando Empleado");
-	Label lblIdEmpleado = new Label("idEmpleado:");
-	Label lblNombreEmpleado = new Label("Nombre:");
-	Label lblDireccionEmpleado = new Label("Direccion:");
-	Label lblTelefonoEmpleado = new Label("Telefono:");
+	Frame ventanaEdicion = new Frame("Editando Producto");
+	Label lblIdProducto = new Label("idProducto:");
+	Label lblNombreProducto = new Label("Nombre Producto:");
+	Label lblprecioProducto = new Label("Precio Producto:");
 	TextField txtId = new TextField(20);
-	TextField txtNombre = new TextField(20);
-	TextField txtDireccion = new TextField(20);
-	TextField txtTelefono = new TextField(20);
+	TextField txtProducto = new TextField(20);
+	TextField txtprecioProducto = new TextField(20);
 	Button btnAceptar = new Button("Aceptar");
 	Button btnCancelar2 = new Button("Cancelar");
 
-	Dialog dlgMensajeModificacionEmpleado = new Dialog(ventanaEdicion, "Confirmación", true);
-	Label lblMensaje = new Label("Modificación de Empleado Correcta");
+	Dialog dlgMensajeModificacionProducto = new Dialog(ventanaEdicion, 
+			"Confirmación", true);
+	Label lblMensaje = new Label("Modificación de Producto Correcta");
 
 	BaseDatos bd;
 	String sentencia = "";
@@ -45,7 +44,7 @@ public class ModificarEmpleado implements WindowListener, ActionListener
 	Statement statement = null;
 	ResultSet rs = null;
 
-	public ModificarEmpleado()
+	public ModificarProducto()
 	{
 		ventana.setLayout(new FlowLayout());
 		// Listeners
@@ -55,14 +54,14 @@ public class ModificarEmpleado implements WindowListener, ActionListener
 		ventanaEdicion.addWindowListener(this);
 		btnAceptar.addActionListener(this);
 		btnCancelar2.addActionListener(this);
-		dlgMensajeModificacionEmpleado.addWindowListener(this);
+		dlgMensajeModificacionProducto.addWindowListener(this);
 
-		ventana.add(lblEmpleado);
+		ventana.add(lblProducto);
 		// Conectar
 		bd = new BaseDatos();
 		connection = bd.conectar();
 		// Hacer un SELECT * FROM Empleados
-		sentencia = "SELECT * FROM Empleados";
+		sentencia = "SELECT * FROM producto";
 		try
 		{
 			//Crear una sentencia
@@ -72,20 +71,19 @@ public class ModificarEmpleado implements WindowListener, ActionListener
 			//y ejecutar la sentencia SQL
 			FicheroLog.guardar(Login.nombreUsuario, sentencia);
 			rs = statement.executeQuery(sentencia);
-			listEmpleados.removeAll();
+			listProducto.removeAll();
 			while(rs.next())
 			{
-				listEmpleados.add(rs.getInt("idEmpleado")
-						+"-"+rs.getString("nombreEmpleado")
-						+"-"+rs.getString("direccionEmpleado")
-						+"-"+rs.getString("telefonoEmpleado"));
+				listProducto.add(rs.getInt("idProducto")
+						+"-"+rs.getString("nombreProducto")
+						+"-"+rs.getString("precioProducto"));
 			}
 		}
 		catch (SQLException sqle)
 		{
 
 		}
-		ventana.add(listEmpleados);
+		ventana.add(listProducto);
 		ventana.add(btnEditar);
 		ventana.add(btnCancelar);
 		ventana.setSize(250,250);
@@ -112,20 +110,18 @@ public class ModificarEmpleado implements WindowListener, ActionListener
 			ventanaEdicion.setLayout(new FlowLayout());
 
 			// Capturar los datos del elemento elegido del List
-			String[] valores = listEmpleados.getSelectedItem().split("-");
-			ventanaEdicion.add(lblIdEmpleado);
+			String[] valores = listProducto.getSelectedItem().split("-");
+			ventanaEdicion.add(lblIdProducto);
 			txtId.setEnabled(false);
 			txtId.setText(valores[0]);
 			ventanaEdicion.add(txtId);
-			ventanaEdicion.add(lblNombreEmpleado);
-			txtNombre.setText(valores[1]);
-			ventanaEdicion.add(txtNombre);
-			ventanaEdicion.add(lblDireccionEmpleado);
-			txtDireccion.setText(valores[2]);
-			ventanaEdicion.add(txtDireccion);
-			ventanaEdicion.add(lblTelefonoEmpleado);
-			txtTelefono.setText(valores[3]);
-			ventanaEdicion.add(txtTelefono);
+			ventanaEdicion.add(lblNombreProducto);
+			txtProducto.setText(valores[1]);
+			ventanaEdicion.add(txtProducto);
+			ventanaEdicion.add(lblNombreProducto);
+			txtprecioProducto.setText(valores[2]);
+			ventanaEdicion.add(txtprecioProducto);
+
 			ventanaEdicion.add(btnAceptar);
 			ventanaEdicion.add(btnCancelar2);
 
@@ -141,10 +137,9 @@ public class ModificarEmpleado implements WindowListener, ActionListener
 			bd = new BaseDatos();
 			connection = bd.conectar();
 			// Hacer un SELECT * FROM Empleados
-			sentencia = "UPDATE empleados SET nombreEmpleado='"
-					+txtNombre.getText()+"', direccionEmpleado='"
-					+txtDireccion.getText()+"', telefonoEmpleado='"
-					+txtTelefono.getText()+"' WHERE idEmpleado="
+			sentencia = "UPDATE producto SET nombreProducto='"
+					+txtProducto.getText()+"', precioProducto='"
+					+txtprecioProducto.getText()+"' WHERE idProducto="
 					+txtId.getText();
 			try
 			{
@@ -155,7 +150,7 @@ public class ModificarEmpleado implements WindowListener, ActionListener
 				//y ejecutar la sentencia SQL
 				FicheroLog.guardar(Login.nombreUsuario, sentencia);
 				statement.executeUpdate(sentencia);
-				lblMensaje.setText("Actualización de Empleado Correcta");
+				lblMensaje.setText("Actualización de Producto Correcta");
 			}
 			catch (SQLException sqle)
 			{
@@ -163,13 +158,13 @@ public class ModificarEmpleado implements WindowListener, ActionListener
 			}
 			finally
 			{
-				dlgMensajeModificacionEmpleado.setLayout(new FlowLayout());
+				dlgMensajeModificacionProducto.setLayout(new FlowLayout());
 
-				dlgMensajeModificacionEmpleado.setSize(150,100);
-				dlgMensajeModificacionEmpleado.setResizable(false);
-				dlgMensajeModificacionEmpleado.setLocationRelativeTo(null);
-				dlgMensajeModificacionEmpleado.add(lblMensaje);
-				dlgMensajeModificacionEmpleado.setVisible(true);
+				dlgMensajeModificacionProducto.setSize(150,100);
+				dlgMensajeModificacionProducto.setResizable(false);
+				dlgMensajeModificacionProducto.setLocationRelativeTo(null);
+				dlgMensajeModificacionProducto.add(lblMensaje);
+				dlgMensajeModificacionProducto.setVisible(true);
 				bd.desconectar(connection);
 			}
 		}

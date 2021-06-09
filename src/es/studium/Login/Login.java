@@ -1,8 +1,10 @@
 package es.studium.Login;
 
 import java.awt.Button;
+import java.awt.Desktop;
 import java.awt.Dialog;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Label;
 import java.awt.TextField;
@@ -10,10 +12,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 public class Login implements WindowListener, ActionListener
 {
@@ -34,6 +47,8 @@ public class Login implements WindowListener, ActionListener
 	Statement statement = null;
 	ResultSet rs = null;
 	
+	public static String nombreUsuario;
+	
 	public Login()
 	{
 		ventanaLogin.setLayout(new FlowLayout());
@@ -51,7 +66,7 @@ public class Login implements WindowListener, ActionListener
 		ventanaLogin.add(btnLimpiar);
 		ventanaLogin.addWindowListener(this);
 		
-		ventanaLogin.setSize(250,125);
+		ventanaLogin.setSize(300,150);
 		ventanaLogin.setLocationRelativeTo(null);
 		ventanaLogin.setResizable(false);
 		ventanaLogin.setVisible(true);
@@ -87,7 +102,10 @@ public class Login implements WindowListener, ActionListener
 				//Crear una sentencia
 				statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);
+				FicheroLog.guardar(Login.nombreUsuario, sentencia);
 				rs = statement.executeQuery(sentencia);
+				nombreUsuario = txtUsuario.getText();
+				
 				if(rs.next()) // Si ha encontrado algo
 				{
 					// Si existe en la BD, mostrar Menú Principal
@@ -151,4 +169,8 @@ public class Login implements WindowListener, ActionListener
 	@Override
 	public void windowOpened(WindowEvent arg0)
 	{}
+	
+	
+	
+
 }

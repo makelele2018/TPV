@@ -28,12 +28,12 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-public class ConsultaEmpleado implements ActionListener, WindowListener
+public class ConsultaProducto implements ActionListener, WindowListener
 {
 	// Ventana Consulta de Empleados
-	Frame frmConsultaEmpleados = new Frame("Consulta Empleados");
-	TextArea listadoEmpleados = new TextArea(4, 50);
-	Button btnPdfEmpleados = new Button("PDF");
+	Frame frmConsultaProducto = new Frame("Consulta Productos");
+	TextArea listadoProducto = new TextArea(4, 50);
+	Button btnPdfProducto = new Button("PDF");
 	
 	BaseDatos bd;
 	String sentencia = "";
@@ -41,14 +41,14 @@ public class ConsultaEmpleado implements ActionListener, WindowListener
 	Statement statement = null;
 	ResultSet rs = null;
 
-	public ConsultaEmpleado()
+	public ConsultaProducto()
 	{
-		frmConsultaEmpleados.setLayout(new FlowLayout());
+		frmConsultaProducto.setLayout(new FlowLayout());
 		// Conectar
 		bd = new BaseDatos();
 		connection = bd.conectar();
 		// Hacer un SELECT * FROM Empleados
-		sentencia = "SELECT * FROM empleados;";
+		sentencia = "SELECT * FROM producto;";
 		// La información está en ResultSet
 		// Recorrer el RS y por cada registro,
 		// meter una línea en el TextArea
@@ -61,35 +61,35 @@ public class ConsultaEmpleado implements ActionListener, WindowListener
 			//y ejecutar la sentencia SQL
 			FicheroLog.guardar(Login.nombreUsuario, sentencia);
 			rs = statement.executeQuery(sentencia);
-			listadoEmpleados.selectAll();
-			listadoEmpleados.setText("");
-			listadoEmpleados.append("id\tNombre\t\tDireccion\ttelefonoEmpleado\\n");
+			listadoProducto.selectAll();
+			listadoProducto.setText("");
+			listadoProducto.append("id\tNombre\t\tPrecio\t\n");
 			while(rs.next())
 			{
-				listadoEmpleados.append(rs.getInt("idEmpleado")
-						+"\t"+rs.getString("nombreEmpleado")
-						+"\t\t"+rs.getString("direccionEmpleado")
-						+"\t\t"+rs.getString("telefonoEmpleado")
+				listadoProducto.append(rs.getInt("idProducto")
+						+"\t"+rs.getString("nombreProducto")
+						+"\t\t"+rs.getString("precioProducto")
 						+"\n");
 			}
 		}
 		catch (SQLException sqle)
 		{
-			listadoEmpleados.setText("Se ha producido un error en la consulta");
+			listadoProducto.setText("Se ha producido un error en la consulta");
 		}
 		finally
 		{
 
 		}
-		listadoEmpleados.setEditable(false);
-		frmConsultaEmpleados.add(listadoEmpleados);
-		frmConsultaEmpleados.add(btnPdfEmpleados);
-		btnPdfEmpleados.addActionListener(this);
-		frmConsultaEmpleados.setSize(400,150);
-		frmConsultaEmpleados.setResizable(false);
-		frmConsultaEmpleados.setLocationRelativeTo(null);
-		frmConsultaEmpleados.addWindowListener(this);
-		frmConsultaEmpleados.setVisible(true);
+		listadoProducto.setEditable(false);
+		frmConsultaProducto.add(listadoProducto);
+		frmConsultaProducto.add(btnPdfProducto);
+		btnPdfProducto.addActionListener(this);
+
+		frmConsultaProducto.setSize(400,150);
+		frmConsultaProducto.setResizable(false);
+		frmConsultaProducto.setLocationRelativeTo(null);
+		frmConsultaProducto.addWindowListener(this);
+		frmConsultaProducto.setVisible(true);
 	}
 
 	@Override
@@ -101,9 +101,9 @@ public class ConsultaEmpleado implements ActionListener, WindowListener
 	@Override
 	public void windowClosing(WindowEvent e)
 	{
-		if(frmConsultaEmpleados.isActive())
+		if(frmConsultaProducto.isActive())
 		{
-			frmConsultaEmpleados.setVisible(false);
+			frmConsultaProducto.setVisible(false);
 		}
 	}
 	@Override
@@ -133,12 +133,12 @@ public class ConsultaEmpleado implements ActionListener, WindowListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if(e.getSource().equals(btnPdfEmpleados)){
+		if(e.getSource().equals(btnPdfProducto)){
 
 			ArrayList<String> datos = new ArrayList<String>();
 
 			datos = obtenerDatosParaExportar();
-			exportarAPDF(datos);
+			exportarAPDF(datos);		
 		}
 
 	}
@@ -152,15 +152,15 @@ public class ConsultaEmpleado implements ActionListener, WindowListener
 		{
 			statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
-			sentencia = "SELECT * FROM empleados;";
+			sentencia = "SELECT * FROM producto;";
 			FicheroLog.guardar(Login.nombreUsuario, sentencia);
 			rs = statement.executeQuery(sentencia);
 			while (rs.next()) 
 			{
-				datos.add(rs.getString("IdEmpleado"));
-				datos.add(rs.getString("nombreEmpleado"));
-				datos.add(rs.getString("direccionEmpleado"));
-				datos.add(rs.getString("telefonoEmpleado"));
+				datos.add(rs.getString("IdProducto"));
+				datos.add(rs.getString("nombreProducto"));
+				datos.add(rs.getString("precioProducto"));
+				
 			}
 
 		}
@@ -176,17 +176,17 @@ public class ConsultaEmpleado implements ActionListener, WindowListener
 	public void exportarAPDF(ArrayList<String> datos) 
 	{
 		Document documento = new Document();
-		Paragraph parrafo = new Paragraph("Listado Empleados", FontFactory.getFont("arial", 22, Font.BOLD));
+		Paragraph parrafo = new Paragraph("Listado Productos", FontFactory.getFont("arial", 22, Font.BOLD));
 		try
 		{
-			FileOutputStream ficheroPDF = new FileOutputStream("empleados.pdf");
+			FileOutputStream ficheroPDF = new FileOutputStream("productos.pdf");
 			PdfWriter.getInstance(documento, ficheroPDF).setInitialLeading(20);
 			documento.open();
-			PdfPTable tabla = new PdfPTable(4);
-			tabla.addCell("IdEmpleado");
+			PdfPTable tabla = new PdfPTable(3);
+			tabla.addCell("IdProducto");
 			tabla.addCell("Nombre");
-			tabla.addCell("Direccion");
-			tabla.addCell("Telefono");
+			tabla.addCell("Precio");
+			
 			
 
 			for (int i =0; i<datos.size(); i++) 
@@ -199,9 +199,9 @@ public class ConsultaEmpleado implements ActionListener, WindowListener
 			documento.add(tabla);
 			documento.close();
 
-			FicheroLog.guardar(Login.nombreUsuario, "Generacion PDF Empleados");
+			FicheroLog.guardar(Login.nombreUsuario, "Generacion PDF Productos");
 
-			File path = new File("empleados.pdf");
+			File path = new File("productos.pdf");
 			Desktop.getDesktop().open(path);
 		}
 		catch (FileNotFoundException e) 

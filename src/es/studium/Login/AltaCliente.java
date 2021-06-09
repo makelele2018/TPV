@@ -120,7 +120,7 @@ public class AltaCliente implements ActionListener, WindowListener
 							+ txtNombreCliente.getText()
 							+ "', '" +txtApellidoCliente.getText() 
 							+ "', '" +txtDireccionCliente.getText()+ "')";
-					 
+					FicheroLog.guardar(Login.nombreUsuario, sentencia);
 					statement.executeUpdate(sentencia);
 					lblMensajeAltaCliente.setText("Alta de Cliente Correcta");
 				}

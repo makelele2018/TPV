@@ -71,6 +71,7 @@ public class ModificarCliente implements WindowListener, ActionListener
 					ResultSet.CONCUR_READ_ONLY);
 			//Crear un objeto ResultSet para guardar lo obtenido
 			//y ejecutar la sentencia SQL
+			FicheroLog.guardar(Login.nombreUsuario, sentencia);
 			rs = statement.executeQuery(sentencia);
 			listClientes.removeAll();
 			while(rs.next())

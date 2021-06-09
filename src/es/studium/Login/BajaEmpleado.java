@@ -169,6 +169,7 @@ public class BajaEmpleado implements ActionListener, WindowListener
 				//Crear una sentencia
 				statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);
+				FicheroLog.guardar(Login.nombreUsuario, sentencia);
 				statement.executeUpdate(sentencia);
 				lblConfirmacionBajaEmpleado.setText("Baja de Empleado Correcta");
 			}
